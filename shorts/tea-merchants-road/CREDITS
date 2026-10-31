@@ -1,0 +1,10 @@
+The Tea Merchant's Road — third-party assets
+
+Voice      Kokoro-82M text-to-speech (voice "bm_george"), Apache License 2.0
+           https://huggingface.co/hexgrad/Kokoro-82M · ONNX runtime via kokoro-onnx (MIT) https://github.com/thewh1teagle/kokoro-onnx
+Fonts      Shippori Mincho (Fontdasu), SIL Open Font License 1.1 — https://fonts.google.com/specimen/Shippori+Mincho
+           Yuji Syuku (Kinuta Font Factory), SIL Open Font License 1.1 — https://fonts.google.com/specimen/Yuji+Syuku
+Print look Woodblock print engine (print.js) adapted from the Lemo-Opuscar Ukiyo-e style, MIT License, notice in LICENSE.print-engine
+           https://github.com/lemomo-ai/lemo-opuscar
+Music      Original score; shamisen and koto physically modelled with the library's pluck.py, all other instruments
+           and all foley synthesized in mix.py. No samples or recordings.

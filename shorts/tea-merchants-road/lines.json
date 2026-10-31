@@ -1,0 +1,11 @@
+[
+ {"id":"l1","text":"Kenji left home with one tea bowl, to sell in the city.","voice":"bm_george","speed":0.86},
+ {"id":"l2","text":"His grandmother had made it. It was plain, and a little crooked.","voice":"bm_george","speed":0.86},
+ {"id":"l3","text":"At the river, the rain caught an old ferryman. Kenji poured him tea.","voice":"bm_george","speed":0.86},
+ {"id":"l4","text":"On the mountain pass, the snow caught an old woman. Kenji poured her tea.","voice":"bm_george","speed":0.86},
+ {"id":"l5","text":"At the festival, a little girl was lost. Kenji poured her tea.","voice":"bm_george","speed":0.88},
+ {"id":"l6","text":"In the city, a rich man offered him ten gold coins.","voice":"bm_george","speed":0.84},
+ {"id":"l7","text":"Kenji thought of the rain, the snow, and the lanterns.","voice":"bm_george","speed":0.82},
+ {"id":"l8","text":"So he carried the bowl home, and poured the first cup for her.","voice":"bm_george","speed":0.84},
+ {"id":"l9","text":"Some things are worth more full than sold.","voice":"bm_george","speed":0.8}
+]

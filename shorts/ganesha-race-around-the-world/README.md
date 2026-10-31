@@ -62,3 +62,15 @@ ffmpeg -i ganesha-race-around-the-world.mp4 -i vo.wav -filter_complex \
   "[1:a]asplit[v1][v2];[0:a]volume=0.5[m];[m][v1]sidechaincompress=threshold=0.05:ratio=6[d];[d][v2]amix=inputs=2:normalize=0[a]" \
   -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 192k with-vo.mp4
 ```
+
+## Hindi version (हिंदी)
+
+`ganesha-race-around-the-world-hindi.mp4`: the same film with Hindi narration (Kokoro TTS, voice `hm_omega`, Apache 2.0)
+and Hindi captions in Tiro Devanagari Hindi (SIL OFL). Subtitles: `ganesha-race-around-the-world.hi.srt`.
+
+```bash
+Q=lang=hi node render.js video /tmp/hindi_noaudio.mp4 4            # captions from hindi/captions_hi.js
+python3 hindi/mix_hi.py /tmp/music.wav /tmp/mix_hi.wav              # narration (hindi/voice/) over the score
+ffmpeg -i /tmp/hindi_noaudio.mp4 -i /tmp/mix_hi.wav -c:v libx264 -crf 23 -maxrate 5M -bufsize 10M -pix_fmt yuv420p \
+  -af loudnorm=I=-14:TP=-1.5 -c:a aac -b:a 192k -shortest -movflags +faststart ganesha-race-around-the-world-hindi.mp4
+```

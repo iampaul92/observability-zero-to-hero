@@ -234,7 +234,7 @@ function sTunnel(t) {
   if (t < boomT + .1) airParticles(t, nx, seg(t, a + 1, boomT), 1);
   // the explanation after the boom: a held pressure diagram
   const ex = seg(t, va(3) - .1, va(3) + .4);
-  if (ex > 0) { X.save(); X.globalAlpha = ex * .9; airParticles(t, PORTAL - 70, 1, 1); X.restore(); tag(t, wordT(3, 'squeezed'), 'COMPRESSED AIR', 120, 236, ORANGE, { to: [PORTAL - 20, TY - 10] }); tag(t, wordT(3, 'exploding'), 'PRESSURE WAVE', 250, 340, '#ff3b30', { to: [PORTAL + 30, TY - 10] }); }
+  if (ex > 0) { X.save(); X.globalAlpha = ex * .9; airParticles(t, PORTAL - 70, 1, 1); X.restore(); tag(t, wordT(3, 'squeezed'), 'COMPRESSED AIR', 120, 236, ORANGE, { to: [PORTAL - 20, TY - 10] }); tag(t, wordT(3, 'exploding'), 'PRESSURE WAVE', 186, 336, '#ff3b30', { to: [PORTAL + 26, TY - 10] }); }
   boomRings(t, boomT, PORTAL + 2, TY - 8); if (ex > 0) boomRings(t, wordT(3, 'exploding'), PORTAL + 2, TY - 8, .8);
   const fl = 1 - seg(t, boomT, boomT + .35); if (t > boomT) glow(PORTAL + 6, TY - 8, 90, 'rgba(255,170,80,A)', fl * .9);
   hud(t, a + .2, 'PROBLEM · TUNNEL BOOM', [['CAUSE', 'AIR PRESSURE'], ['LOUDNESS', t > boomT ? 'EXTREME' : '—', t > boomT ? '#ff3b30' : null]]);

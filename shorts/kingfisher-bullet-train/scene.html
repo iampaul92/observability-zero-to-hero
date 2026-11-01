@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: Play; font-weight: 500; src: url(fonts/playfair-500.woff2); }
+  @font-face { font-family: Arch; src: url(fonts/archivo-black.woff2); }
+  @font-face { font-family: Mono; font-weight: 700; src: url(fonts/jbmono-700.woff2); }
+  html, body { margin: 0; background: #000; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script src="timeline.js"></script>
+<script>
+// "The Bird That Fixed the Bullet Train" — a nature-meets-engineering explainer short.
+// Drawn procedurally in a 360x640 logical space, rendered at 3x.
+const C = document.getElementById('c'), X = C.getContext('2d');
+const W = 360, H = 640, S = 3, DUR = TL.dur, SCN = TL.scenes, V = TL.voice, CT = TL.ct;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v)), lerp = (a, b, t) => a + (b - a) * t;
+const seg = (t, a, b) => clamp((t - a) / (b - a)), ease = t => { t = clamp(t); return t * t * (3 - 2 * t); };
+const eo = t => 1 - Math.pow(1 - clamp(t), 3), ei = t => Math.pow(clamp(t), 3), TAU = Math.PI * 2;
+function rng(s) { return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+const P = f => { X.beginPath(); f(); };
+const va = i => V[i][0], vb = i => V[i][1];
+const ORANGE = '#ff7a1a', YEL = '#ffd21f', CYAN = '#38c6ff', BLUE = '#1b6cff', HUDBG = 'rgba(10,28,48,.75)';
+function glow(x, y, r, col, a) { if (a <= 0) return; const g = X.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, col.replace('A', a)); g.addColorStop(1, col.replace('A', 0)); X.fillStyle = g; X.fillRect(x - r, y - r, 2 * r, 2 * r); }
+// word time inside a voice line (by characters): f = 0..1
+function wordT(i, word) { const txt = TL.caps[i].replace(/\*/g, ''), k = txt.indexOf(word); return va(i) + (vb(i) - va(i)) * clamp(k / txt.length) * .95; }
+
+// ---------------- HUD ----------------
+function typed(str, p) { return str.slice(0, Math.round(str.length * clamp(p))); }
+let HUDQ = [];
+function hud(...args) { HUDQ.push(args); }
+function hudDraw(t, t0, title, rows, o = {}) {
+  const p = seg(t, t0, t0 + .5); if (p <= 0) return;
+  const x0 = o.x ?? 10, y0 = o.y ?? 16;
+  X.save(); X.globalAlpha = o.a ?? 1;
+  X.font = '700 5.4px Mono'; X.fillStyle = ORANGE; X.textBaseline = 'top';
+  X.fillText(typed(title, p * 1.6), x0, y0);
+  rows.forEach(([k, v, col], i) => {
+    const q = seg(t, t0 + .15 + i * .18, t0 + .6 + i * .18); if (q <= 0) return;
+    const y = y0 + 10 + i * 24, w = o.w ?? 74;
+    X.fillStyle = HUDBG; X.fillRect(x0, y, w * ease(q), 19);
+    X.strokeStyle = 'rgba(56,198,255,.65)'; X.lineWidth = .6; X.strokeRect(x0, y, w * ease(q), 19);
+    X.fillStyle = CYAN; X.fillRect(x0, y, 1.6, 19 * ease(q));
+    X.font = '700 4.2px Mono'; X.fillStyle = 'rgba(190,210,230,.8)'; X.fillText(typed(k, q * 2), x0 + 4, y + 3);
+    X.font = '700 6.6px Mono'; X.fillStyle = col || '#7fd3ff'; X.fillText(typed(v, (q - .3) * 2), x0 + 4, y + 10);
+  });
+  X.restore();
+}
+function tag(t, t0, txt, x, y, col = ORANGE, o = {}) {   // small floating label with a leader line
+  const p = seg(t, t0, t0 + .4); if (p <= 0) return;
+  X.save(); X.globalAlpha = p * (o.a ?? 1);
+  if (o.to) { X.strokeStyle = col; X.lineWidth = .6; P(() => { X.moveTo(o.to[0], o.to[1]); X.lineTo(x, y + 4); }); X.stroke(); P(() => X.arc(o.to[0], o.to[1], 1.6, 0, TAU)); X.fillStyle = col; X.fill(); }
+  X.font = '700 5.6px Mono'; const w = X.measureText(txt).width + 8;
+  X.fillStyle = 'rgba(0,0,0,.7)'; X.fillRect(x - 1, y - 1, w * ease(p), 11); X.strokeStyle = col; X.lineWidth = .6; X.strokeRect(x - 1, y - 1, w * ease(p), 11);
+  X.fillStyle = col; X.textBaseline = 'top'; X.fillText(typed(txt, p * 1.5), x + 3, y + 2);
+  X.restore();
+}
+function bigNum(t, t0, val, suffix, x, y, size, col, sub, o = {}) {
+  const p = seg(t, t0, t0 + .7); if (p <= 0) return;
+  const v = o.noCount ? val : Math.round(val * eo(p));
+  X.save(); X.globalAlpha = seg(t, t0, t0 + .2); X.textAlign = o.align || 'center'; X.textBaseline = 'alphabetic';
+  X.font = `${size}px Arch`; X.fillStyle = col; X.shadowColor = col; X.shadowBlur = 8;
+  X.fillText((o.prefix || '') + v + suffix, x, y + (1 - eo(p)) * 6);
+  X.shadowBlur = 0; if (sub) { X.font = `500 ${size * .26}px Play`; X.fillStyle = 'rgba(230,230,230,.75)'; X.fillText(sub, x, y + size * .38); }
+  X.restore();
+}
+function grid(a = .07) { X.strokeStyle = `rgba(56,198,255,${a})`; X.lineWidth = .4; for (let x = 0; x <= W; x += 20) { P(() => { X.moveTo(x, 0); X.lineTo(x, H); }); X.stroke(); } for (let y = 0; y <= H; y += 20) { P(() => { X.moveTo(0, y); X.lineTo(W, y); }); X.stroke(); } }
+
+// ---------------- the kingfisher (faces +x; beak tip at about (+58, -6) for s=1) ----------------
+function kingfisher(x, y, s, o = {}) {
+  X.save(); X.translate(x, y); X.rotate(o.rot || 0); X.scale(s, s);
+  const back = X.createLinearGradient(-30, -30, 20, 10); back.addColorStop(0, '#0a5b8f'); back.addColorStop(.5, '#14a3d0'); back.addColorStop(1, '#26d0e8');
+  const belly = X.createLinearGradient(0, -6, 0, 22); belly.addColorStop(0, '#f08a33'); belly.addColorStop(1, '#b8501a');
+  X.shadowColor = 'rgba(56,198,255,.35)'; X.shadowBlur = 14;
+  // tail
+  P(() => { X.moveTo(-26, 4); X.lineTo(-46, 14 - (o.dive ? 10 : 0)); X.lineTo(-44, 20 - (o.dive ? 12 : 0)); X.lineTo(-22, 12); X.closePath(); }); X.fillStyle = '#0b4f7d'; X.fill();
+  X.shadowBlur = 0;
+  // body
+  P(() => { X.moveTo(18, -12); X.bezierCurveTo(6, -22, -24, -16, -30, 4); X.bezierCurveTo(-26, 18, -4, 24, 10, 16); X.bezierCurveTo(20, 10, 24, -2, 18, -12); }); X.fillStyle = back; X.fill();
+  P(() => { X.moveTo(16, -4); X.bezierCurveTo(18, 8, 4, 22, -14, 18); X.bezierCurveTo(-4, 12, 8, 4, 16, -4); }); X.fillStyle = belly; X.fill();
+  // wing with feather scallops
+  P(() => { X.moveTo(8, -10); X.bezierCurveTo(-6, -16, -26, -10, -34, 6 + (o.dive ? -6 : 0)); X.bezierCurveTo(-18, 8, -2, 6, 8, -10); }); X.fillStyle = '#0d6fa0'; X.fill();
+  X.strokeStyle = 'rgba(120,230,255,.55)'; X.lineWidth = .7;
+  for (let i = 0; i < 6; i++) { P(() => X.arc(-4 - i * 4.5, -6 + i * 1.6, 3.2, .3, Math.PI - .3)); X.stroke(); }
+  const r = rng(9); X.fillStyle = 'rgba(160,240,255,.8)'; for (let i = 0; i < 26; i++) { P(() => X.arc(-16 + r() * 30, -14 + r() * 10, .5 + r() * .5, 0, TAU)); X.fill(); }
+  // head
+  P(() => X.arc(20, -12, 11, 0, TAU)); X.fillStyle = back; X.fill();
+  P(() => { X.moveTo(26, -18); X.bezierCurveTo(14, -16, 10, -10, 12, -4); X.lineTo(22, -6); X.closePath(); }); X.fillStyle = '#e9772c'; X.fill();   // orange lores/cheek
+  P(() => { X.moveTo(15, -3); X.bezierCurveTo(14, 2, 18, 4, 24, 0); X.lineTo(26, -5); X.closePath(); }); X.fillStyle = '#f4f1e8'; X.fill();     // white throat
+  P(() => { X.moveTo(8, -6); X.quadraticCurveTo(9, -1, 13, 0); X.lineTo(11, -7); X.closePath(); }); X.fillStyle = '#f4f1e8'; X.fill();
+  // beak: long, narrow, dark
+  const bl = o.beakLen || 1;
+  P(() => { X.moveTo(28, -16); X.lineTo(28 + 30 * bl, -6.5); X.lineTo(28, -8); X.closePath(); }); const bk = X.createLinearGradient(28, -16, 28, -6); bk.addColorStop(0, '#2b2b30'); bk.addColorStop(1, '#0c0c0e'); X.fillStyle = bk; X.fill();
+  X.strokeStyle = 'rgba(255,255,255,.25)'; X.lineWidth = .5; P(() => { X.moveTo(29, -14); X.lineTo(28 + 28 * bl, -7.2); }); X.stroke();
+  // eye
+  P(() => X.arc(22, -14, 2.6, 0, TAU)); X.fillStyle = '#050505'; X.fill(); P(() => X.arc(22.8, -14.8, .8, 0, TAU)); X.fillStyle = '#fff'; X.fill();
+  // feet
+  if (!o.dive) { X.strokeStyle = '#e8463a'; X.lineWidth = 1.6; P(() => { X.moveTo(0, 19); X.lineTo(-1, 25); X.moveTo(5, 18); X.lineTo(5, 25); }); X.stroke(); }
+  // rim light
+  X.strokeStyle = 'rgba(140,235,255,.5)'; X.lineWidth = .8; P(() => { X.moveTo(18, -23); X.bezierCurveTo(4, -24, -20, -18, -30, 2); }); X.stroke();
+  X.restore();
+}
+
+// ---------------- the train (side profile, faces +x; nose tip at x) ----------------
+// m: 0 = blunt early nose, 1 = long kingfisher-like nose; L = car length behind the nose
+function noseShape(m, nl) {   // returns top and bottom curve control points relative to nose tip (0,0), going back to -nl
+  const k = lerp(.32, 1, m), h = 22;
+  return { nl: nl * k, top: [[0, -1 - (1 - m) * 6], [-nl * k * lerp(.15, .35, m), -h * lerp(.75, .55, m)], [-nl * k, -h]], bot: [[-nl * k * .3, 7], [-nl * k, 8]] };
+}
+function train(x, y, s, o = {}) {
+  const m = o.m ?? 1, nl = o.nl || 90, L = o.L || 180;
+  X.save(); X.translate(x, y); X.scale(s, s);
+  const ns = noseShape(m, nl), N = ns.nl;
+  const body = X.createLinearGradient(0, -24, 0, 10); body.addColorStop(0, '#eef2f6'); body.addColorStop(.55, '#aeb8c4'); body.addColorStop(1, '#5d6670');
+  const path = () => { X.moveTo(0, ns.top[0][1]); X.bezierCurveTo(ns.top[1][0], ns.top[1][1] * .4, ns.top[1][0], ns.top[1][1], N * -1, -22); X.lineTo(-N - L, -22); X.lineTo(-N - L, 9); X.lineTo(-N, 9); X.quadraticCurveTo(-N * .3, 9, 0, 3 - (1 - m) * 1); X.quadraticCurveTo(2, 0, 0, ns.top[0][1]); };
+  X.shadowColor = o.glow || 'rgba(56,198,255,.25)'; X.shadowBlur = 12; P(path); X.fillStyle = body; X.fill(); X.shadowBlur = 0;
+  // blue stripe + window band
+  X.save(); P(path); X.clip();
+  X.fillStyle = '#1c3f8f'; X.fillRect(-N - L, -1, L + N, 3.2);
+  X.fillStyle = '#0d1a2e'; X.fillRect(-N - L + 6, -15, L - 4, 6);
+  for (let i = 0; i < 14; i++) { X.fillStyle = 'rgba(120,190,255,.35)'; X.fillRect(-N - L + 9 + i * 12.5, -14, 8, 4); }
+  P(() => { X.moveTo(-N * .55, -19.5); X.quadraticCurveTo(-N * .32, -18, -N * .22, -12); X.lineTo(-N * .5, -12); X.closePath(); }); X.fillStyle = '#0d1a2e'; X.fill();  // cockpit
+  X.restore();
+  X.strokeStyle = 'rgba(255,255,255,.55)'; X.lineWidth = .5; P(() => { X.moveTo(-3, ns.top[0][1] + 1); X.bezierCurveTo(ns.top[1][0], ns.top[1][1] * .4 + 1, ns.top[1][0], ns.top[1][1] + 1, -N, -21); }); X.stroke();
+  // bogies
+  for (const bx of [-N - 20, -N - L + 24]) { X.fillStyle = '#20252b'; X.fillRect(bx - 12, 9, 24, 4); for (const w of [-7, 7]) { P(() => X.arc(bx + w, 14, 3, 0, TAU)); X.fillStyle = '#121417'; X.fill(); } }
+  X.restore();
+  return { tip: [x, y + ns.top[0][1] * s] };
+}
+
+// ---------------- sets ----------------
+const stars = (() => { const r = rng(4); return Array.from({ length: 70 }, () => [r() * W, r() * H * .5, r() * .9 + .2]); })();
+function nightSky(t, a = 1) { stars.forEach(([x, y, r], i) => { X.fillStyle = `rgba(200,230,255,${a * (.3 + .3 * Math.sin(t * 2 + i))})`; P(() => X.arc(x, y, r, 0, TAU)); X.fill(); }); }
+function speedLines(t, y0, y1, a = 1, n = 22) { const r = rng(12); for (let i = 0; i < n; i++) { const y = lerp(y0, y1, r()), sp = 300 + r() * 300, len = 30 + r() * 60, x = W + 60 - ((t * sp + r() * 600) % (W + 200)); X.strokeStyle = `rgba(140,210,255,${a * (.15 + r() * .35)})`; X.lineWidth = .6 + r(); P(() => { X.moveTo(x, y); X.lineTo(x + len, y); }); X.stroke(); } }
+
+// tunnel cutaway: mountain with a bore at y = TY
+const TY = 300, PORTAL = 250;
+function mountain(t, a = 1) {
+  const g = X.createLinearGradient(0, 160, 0, 360); g.addColorStop(0, '#1d2a35'); g.addColorStop(1, '#0d1217');
+  P(() => { X.moveTo(-20, 360); X.lineTo(-20, 230); X.quadraticCurveTo(80, 150, 160, 175); X.quadraticCurveTo(220, 190, PORTAL, 250); X.lineTo(PORTAL, 360); X.closePath(); });
+  X.fillStyle = g; X.fill(); X.strokeStyle = 'rgba(56,198,255,.4)'; X.lineWidth = .8; X.stroke();
+  // cutaway bore
+  X.fillStyle = '#05080b'; X.fillRect(-20, TY - 30, PORTAL + 20, 44);
+  X.strokeStyle = 'rgba(56,198,255,.55)'; X.setLineDash([3, 2]); X.strokeRect(-20, TY - 30, PORTAL + 20, 44); X.setLineDash([]);
+  // portal ring
+  X.strokeStyle = '#8c98a4'; X.lineWidth = 3; P(() => { X.moveTo(PORTAL, TY + 14); X.lineTo(PORTAL, TY - 32); }); X.stroke();
+  // ground + track
+  X.fillStyle = '#0b0f13'; X.fillRect(-20, TY + 14, W + 40, 60); X.strokeStyle = '#3a444e'; X.lineWidth = 1; P(() => { X.moveTo(-20, TY + 14.5); X.lineTo(W + 20, TY + 14.5); }); X.stroke();
+}
+function airParticles(t, noseX, dens, a = 1) {   // air ahead of the nose, compressed toward the exit
+  const r = rng(77);
+  for (let i = 0; i < 160; i++) {
+    let u = r(), yy = TY - 28 + r() * 40;
+    const span = Math.max(8, PORTAL - noseX);
+    const xx = noseX + 4 + Math.pow(u, 1 + dens * 2.5) * span;
+    if (xx > PORTAL) continue;
+    const heat = 1 - (xx - noseX) / span;
+    X.fillStyle = `rgba(${Math.round(lerp(80, 255, heat * dens))},${Math.round(lerp(180, 120, heat * dens))},${Math.round(lerp(255, 40, heat * dens))},${a * (.35 + .5 * heat)})`;
+    P(() => X.arc(xx + Math.sin(t * 9 + i) * .6, yy, .9, 0, TAU)); X.fill();
+  }
+}
+function boomRings(t, t0, x, y, a = 1) {
+  for (let k = 0; k < 4; k++) {
+    const p = seg(t, t0 + k * .12, t0 + k * .12 + 1.4); if (p <= 0 || p >= 1) continue;
+    X.strokeStyle = `rgba(255,122,26,${a * (1 - p)})`; X.lineWidth = 3 * (1 - p) + .5; X.shadowColor = ORANGE; X.shadowBlur = 10;
+    P(() => X.arc(x, y, 10 + p * 170, -1.25, 1.25)); X.stroke(); X.shadowBlur = 0;
+  }
+}
+function house(x, y, s, lit) {
+  X.save(); X.translate(x, y); X.scale(s, s);
+  P(() => { X.moveTo(-14, 0); X.lineTo(-14, -16); X.lineTo(0, -28); X.lineTo(14, -16); X.lineTo(14, 0); X.closePath(); });
+  X.fillStyle = '#141b22'; X.fill(); X.strokeStyle = 'rgba(56,198,255,.45)'; X.lineWidth = .7; X.stroke();
+  X.fillStyle = lit ? 'rgba(255,200,90,.9)' : 'rgba(255,200,90,.25)'; X.fillRect(-8, -12, 5, 5); X.fillRect(3, -12, 5, 5);
+  X.restore();
+}
+function engineer(x, y, s, binos) {
+  X.save(); X.translate(x, y); X.scale(s, s); X.fillStyle = '#0e141a'; X.strokeStyle = 'rgba(56,198,255,.55)'; X.lineWidth = .8;
+  P(() => { X.moveTo(-18, 0); X.lineTo(-14, -60); X.quadraticCurveTo(0, -72, 14, -60); X.lineTo(18, 0); X.closePath(); }); X.fill(); X.stroke();
+  P(() => X.arc(0, -80, 11, 0, TAU)); X.fill(); X.stroke();
+  // arms raising binoculars
+  const b = ease(binos);
+  P(() => { X.moveTo(8, -60); X.lineTo(lerp(16, 16, b), lerp(-36, -78, b)); X.lineTo(lerp(18, 12, b), lerp(-30, -80, b)); }); X.lineWidth = 6; X.strokeStyle = '#0e141a'; X.stroke();
+  X.fillStyle = '#26303a'; X.fillRect(lerp(14, 8, b), lerp(-34, -86, b), 10, 7);
+  X.restore();
+}
+function water(y, a = 1) {
+  const g = X.createLinearGradient(0, y, 0, H); g.addColorStop(0, `rgba(20,110,170,${.85 * a})`); g.addColorStop(1, `rgba(3,20,40,${a})`);
+  X.fillStyle = g; X.fillRect(0, y, W, H - y);
+  X.strokeStyle = `rgba(140,220,255,${.8 * a})`; X.lineWidth = 1; P(() => { X.moveTo(0, y); X.lineTo(W, y); }); X.stroke();
+}
+// streamlines around a shape: path(x) gives the half-thickness of the body at x (0 outside)
+function streamlines(t, x0, x1, cy, thick, turb, a = 1, col = '56,198,255') {
+  for (let k = -6; k <= 6; k++) {
+    if (k === 0) continue;
+    const off = k * 9;
+    X.strokeStyle = `rgba(${col},${a * (.75 - Math.abs(k) * .07)})`; X.lineWidth = .8;
+    P(() => {
+      for (let i = 0; i <= 90; i++) {
+        const x = lerp(x0, x1, i / 90), th = thick(x), push = th > 0 ? th * Math.exp(-Math.abs(off) / 30) : 0;
+        let y = cy + off + Math.sign(off) * push;
+        const behind = turb(x); if (behind > 0) y += Math.sin(x * .35 + t * 14 + k * 1.7) * behind * (1.2 - Math.abs(k) / 7);
+        i ? X.lineTo(x, y) : X.moveTo(x, y);
+      }
+    });
+    X.stroke();
+    // a moving dash on each line
+    const px = x0 + ((t * 90 + k * 37) % (x1 - x0)); X.fillStyle = `rgba(255,255,255,${a * .8})`; P(() => X.arc(px, cy + off, .9, 0, TAU)); X.fill();
+  }
+}
+
+// ---------------- scenes ----------------
+function sTrain(t) {
+  nightSky(t, .6);
+  speedLines(t, 250, 330, 1);
+  const x = lerp(-40, 300, eo(seg(t, 0, 2.5)));
+  train(x, 300, 1.05, { m: .15, nl: 80, L: 400 });
+  hud(t, .2, 'SUBJECT · SHINKANSEN', [['ERA', '1990s'], ['TYPE', 'HIGH-SPEED RAIL']]);
+  const w = wordT(0, 'problem');
+  if (t > w) { const p = seg(t, w, w + .3); X.save(); X.globalAlpha = p * (.7 + .3 * Math.sin(t * 12)); tag(t, w, '⚠ ANOMALY DETECTED', 210, 210, '#ff3b30', { to: [x - 10, 285] }); X.restore(); }
+}
+function sTunnel(t) {
+  nightSky(t, .5);
+  mountain(t);
+  const a = SCN.tunnel[0], boomT = wordT(2, 'boom');
+  const nose = lerp(-60, PORTAL - 4, ease(seg(t, a, boomT)));
+  const after = seg(t, boomT, boomT + 1.2);
+  const nx = t < boomT ? nose : lerp(PORTAL - 4, PORTAL + 70, eo(after));
+  X.save(); X.beginPath(); X.rect(-20, TY - 30, W + 60, 44); X.clip();
+  train(nx, TY, .9, { m: .15, nl: 80, L: 400 }); X.restore();
+  if (t < boomT + .1) airParticles(t, nx, seg(t, a + 1, boomT), 1);
+  // the explanation after the boom: a held pressure diagram
+  const ex = seg(t, va(3) - .1, va(3) + .4);
+  if (ex > 0) { X.save(); X.globalAlpha = ex * .9; airParticles(t, PORTAL - 70, 1, 1); X.restore(); tag(t, wordT(3, 'squeezed'), 'COMPRESSED AIR', 120, 236, ORANGE, { to: [PORTAL - 20, TY - 10] }); tag(t, wordT(3, 'exploding'), 'PRESSURE WAVE', 250, 340, '#ff3b30', { to: [PORTAL + 30, TY - 10] }); }
+  boomRings(t, boomT, PORTAL + 2, TY - 8); if (ex > 0) boomRings(t, wordT(3, 'exploding'), PORTAL + 2, TY - 8, .8);
+  const fl = 1 - seg(t, boomT, boomT + .35); if (t > boomT) glow(PORTAL + 6, TY - 8, 90, 'rgba(255,170,80,A)', fl * .9);
+  hud(t, a + .2, 'PROBLEM · TUNNEL BOOM', [['CAUSE', 'AIR PRESSURE'], ['LOUDNESS', t > boomT ? 'EXTREME' : '—', t > boomT ? '#ff3b30' : null]]);
+}
+function sHouses(t) {
+  nightSky(t, .5);
+  X.fillStyle = '#0b0f13'; P(() => { X.moveTo(-20, 330); X.quadraticCurveTo(180, 290, 380, 320); X.lineTo(380, 400); X.lineTo(-20, 400); X.closePath(); }); X.fill();
+  X.strokeStyle = 'rgba(56,198,255,.35)'; X.lineWidth = .8; X.stroke();
+  P(() => { X.moveTo(-20, 330); X.lineTo(30, 330); X.lineTo(30, 260); X.quadraticCurveTo(10, 220, -20, 230); }); X.fillStyle = '#1a242e'; X.fill();
+  X.fillStyle = '#05080b'; X.fillRect(18, 300, 14, 30);
+  for (let k = 0; k < 3; k++) boomRings(t, SCN.houses[0] + .2 + k * .7, 32, 312, .8);
+  [[110, 316, .9], [160, 308, 1], [215, 306, 1.1], [270, 310, 1], [320, 316, .9]].forEach(([x, y, s], i) => {
+    const hit = t > SCN.houses[0] + .5 + i * .18;
+    house(x + (hit ? Math.sin(t * 40 + i) * .6 : 0), y, s, hit);
+    if (hit) { X.save(); X.globalAlpha = seg(t, SCN.houses[0] + .5 + i * .18, SCN.houses[0] + .8 + i * .18); X.font = '18px Arch'; X.fillStyle = '#ff3b30'; X.textAlign = 'center'; X.fillText('!', x, y - 36 - Math.sin(t * 6 + i) * 2); X.restore(); }
+  });
+  hud(t, SCN.houses[0] + .1, 'IMPACT · NEARBY RESIDENTS', [['COMPLAINTS', '▲ RISING', '#ff3b30']]);
+}
+function sEngineer(t) {
+  const a = SCN.engineer[0];
+  engineer(110, 360, 1.25, seg(t, va(6) - .4, va(6) + .5));
+  hud(t, a + .2, 'ENGINEER · JR WEST', [['NAME', 'EIJI NAKATSU'], ['HOBBY', t > wordT(5, 'birdwatcher') ? 'BIRDWATCHING' : '…', YEL]], { w: 86 });
+  // the binocular view finds a bird
+  const v = ease(seg(t, va(6) + .3, va(6) + 1.3));
+  if (v > 0) {
+    const cx = 255, cy = 230, r = 52 * v;
+    X.save(); P(() => { X.arc(cx - r * .45, cy, r * .62, 0, TAU); X.arc(cx + r * .45, cy, r * .62, 0, TAU); }); X.clip();
+    const g = X.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, '#1b3a2a'); g.addColorStop(1, '#070d0a'); X.fillStyle = g; X.fillRect(cx - r * 1.2, cy - r, r * 2.4, r * 2);
+    X.strokeStyle = '#3a2a1a'; X.lineWidth = 4; P(() => { X.moveTo(cx - 60, cy + 22); X.lineTo(cx + 60, cy + 14); }); X.stroke();
+    kingfisher(cx + 4, cy + 4, .62, {}); X.restore();
+    X.strokeStyle = 'rgba(56,198,255,.7)'; X.lineWidth = 1; P(() => { X.arc(cx - r * .45, cy, r * .62, 0, TAU); }); X.stroke(); P(() => { X.arc(cx + r * .45, cy, r * .62, 0, TAU); }); X.stroke();
+    P(() => { X.moveTo(150, 278); X.lineTo(cx - r, cy + 10); }); X.setLineDash([2, 3]); X.stroke(); X.setLineDash([]);
+  }
+}
+function sBird(t) {
+  const a = SCN.bird[0], p = eo(seg(t, a, a + .8));
+  glow(180, 250, 170, 'rgba(38,170,220,A)', .22 * p);
+  X.strokeStyle = '#3a2a1a'; X.lineWidth = 6; P(() => { X.moveTo(-10, 300); X.quadraticCurveTo(180, 286, 380, 296); }); X.stroke();
+  kingfisher(lerp(150, 165, p), 270, 2.6 * lerp(.9, 1, p), {});
+  hud(t, a, 'SPECIMEN · COMMON KINGFISHER', [['SPECIES', 'ALCEDO ATTHIS'], ['HUNTS BY', 'DIVING']], { w: 90 });
+}
+function sDive(t) {
+  const a = SCN.dive[0], WY = 330;
+  X.fillStyle = 'rgba(30,60,90,.25)'; X.fillRect(0, 0, W, WY);
+  water(WY);
+  tag(t, wordT(8, 'air'), 'AIR · ~1.2 kg/m³', 228, 120, CYAN);
+  tag(t, wordT(8, 'water'), 'WATER · ~1,000 kg/m³', 200, 480, CYAN);
+  const entry = wordT(9, 'splash') - .5;
+  const p = seg(t, a + .2, entry);
+  const bx = lerp(110, 176, p), by = lerp(110, WY + 12, ei(p));
+  if (t <= entry) { X.save(); X.beginPath(); X.rect(0, 0, W, WY + 1); X.clip();
+  kingfisher(bx, by, 1.5, { dive: true, rot: lerp(.4, 1.45, ease(p)) });
+  X.restore(); }
+  if (t > entry) {   // under water: a calm path, tiny ripple
+    const q = seg(t, entry, entry + 1.4);
+    X.save(); X.beginPath(); X.rect(0, WY, W, H - WY); X.clip(); X.globalAlpha = .85;
+    kingfisher(176, lerp(WY + 12, WY + 80, eo(q)), 1.5, { dive: true, rot: 1.45 }); X.restore();
+    for (let k = 0; k < 2; k++) { const rp = seg(t, entry + k * .2, entry + k * .2 + 1.2); X.strokeStyle = `rgba(200,240,255,${.8 * (1 - rp)})`; X.lineWidth = .8; P(() => X.ellipse(178, WY, 6 + rp * 40, 1.5 + rp * 4, 0, 0, TAU)); X.stroke(); }
+    for (let i = 0; i < 4; i++) { const dp = seg(t, entry, entry + .5); P(() => X.arc(178 + (i - 1.5) * 4 * dp, WY - Math.sin(dp * Math.PI) * 6 * (1 + i % 2), .9, 0, TAU)); X.fillStyle = `rgba(220,245,255,${1 - dp})`; X.fill(); }
+  }
+  hud(t, a + .1, 'TEST · WATER ENTRY', [['MEDIUM CHANGE', 'AIR → WATER'], ['SPLASH', t > entry + .3 ? 'MINIMAL' : '…', YEL]], { w: 86 });
+}
+function sBeak(t) {
+  const a = SCN.beak[0];
+  // the beak, big, horizontal
+  X.save(); X.translate(-140, 0); kingfisher(130, 300, 4.2, {}); X.restore();
+  const tipX = -140 + 130 + 58 * 4.2, tipY = 300 - 6.5 * 4.2, baseX = -140 + 130 + 28 * 4.2, baseY = 300 - 12 * 4.2;
+  const lw = wordT(10, 'long'), nw = wordT(10, 'narrow'), rw = wordT(10, 'round');
+  if (t > lw) { const p = eo(seg(t, lw, lw + .5)); X.strokeStyle = YEL; X.lineWidth = .8; P(() => { X.moveTo(baseX, 215); X.lineTo(lerp(baseX, tipX, p), 215); }); X.stroke(); P(() => { X.moveTo(baseX, 211); X.lineTo(baseX, 219); X.moveTo(tipX, 211); X.lineTo(tipX, 219); }); X.globalAlpha = p; X.stroke(); X.globalAlpha = 1; tag(t, lw, 'LONG', (baseX + tipX) / 2 - 10, 200, YEL); }
+  if (t > nw) tag(t, nw, 'NARROW', tipX - 70, 286, YEL, { to: [tipX - 50, tipY + 1] });
+  if (t > rw) {
+    const p = eo(seg(t, rw, rw + .5)), cx = 290, cy = 170;
+    X.strokeStyle = CYAN; X.lineWidth = .8; X.strokeRect(cx - 34, cy - 34, 68, 68);
+    P(() => X.arc(cx, cy, 20 * p, 0, TAU)); X.fillStyle = '#16161a'; X.fill(); X.strokeStyle = YEL; X.lineWidth = 1.2; X.stroke();
+    X.font = '700 4.6px Mono'; X.fillStyle = CYAN; X.textAlign = 'center'; X.fillText('CROSS-SECTION', cx, cy + 30);
+    P(() => { X.moveTo(cx - 34, cy + 34); X.lineTo(tipX - 40, tipY); }); X.setLineDash([2, 2]); X.stroke(); X.setLineDash([]);
+  }
+  // slicing vs slamming
+  const s2 = seg(t, va(11) - .2, va(11) + .5);
+  if (s2 > 0) {
+    X.save(); X.globalAlpha = s2;
+    X.fillStyle = 'rgba(0,0,0,.6)'; X.fillRect(0, 360, W, 150);
+    const thinB = x => x > 70 && x < 150 ? (x - 70) / 80 * 7 : x >= 150 && x < 175 ? 7 : 0;
+    const thick = x => x > 220 && x < 300 ? 14 : 0;
+    X.fillStyle = '#1a1a20'; P(() => { X.moveTo(70, 400); X.lineTo(150, 393); X.lineTo(175, 393); X.lineTo(175, 407); X.lineTo(150, 407); X.closePath(); }); X.fill();
+    streamlines(t, 20, 175, 400, thinB, () => 0, .9, '56,198,255');
+    P(() => X.arc(240, 470, 14, 0, TAU)); X.fill();
+    streamlines(t, 185, 345, 470, x => x > 226 && x < 254 ? 14 : 0, x => x > 254 ? Math.min(6, (x - 254) * .15) : 0, .9, '255,90,60');
+    X.font = '700 5.6px Mono'; X.textAlign = 'left'; X.fillStyle = CYAN; X.fillText('LONG + NARROW → PARTS', 20, 380); X.fillStyle = '#ff5a3c'; X.fillText('BLUNT → SLAMS', 190, 448);
+    X.restore();
+  }
+}
+function sTest(t) {
+  const a = SCN.test[0];
+  grid(.06);
+  const m = ease(seg(t, a + .6, wordT(13, 'better')));
+  const pass = Math.min(9, 1 + Math.floor(m * 8.999));
+  // wind tunnel walls
+  X.strokeStyle = 'rgba(56,198,255,.5)'; X.lineWidth = 1; P(() => { X.moveTo(0, 220); X.lineTo(W, 220); X.moveTo(0, 380); X.lineTo(W, 380); }); X.stroke();
+  const tipX = 250;
+  const ns = noseShape(m, 120);
+  streamlines(t, 0, W, 300, x => { if (x > tipX) return 0; const d = (tipX - x) / ns.nl; return d > 1 ? 22 : 22 * Math.pow(d, lerp(.25, .85, m)); }, x => x > tipX - 6 ? Math.min(lerp(9, 1, m), (x - tipX + 6) * .25) : 0, .75);
+  train(tipX, 306, 1, { m, nl: 120, L: 300 });
+  // the bird's beak, overlaid, matching at the end
+  const ov = seg(t, wordT(13, 'kingfisher'), wordT(13, 'kingfisher') + .6);
+  if (ov > 0) { X.save(); X.globalAlpha = ov * .9; X.shadowColor = CYAN; X.shadowBlur = 8; X.strokeStyle = CYAN; X.setLineDash([3, 2]); X.lineWidth = 1.2; P(() => { X.moveTo(tipX - 1, 302); X.lineTo(tipX - ns.nl, 280); X.moveTo(tipX - 1, 304); X.lineTo(tipX - ns.nl, 312); }); X.stroke(); X.restore(); X.save(); X.globalAlpha = ov; kingfisher(tipX - ns.nl - 38, 282, 1.1, {}); X.restore(); }
+  // pressure gauge
+  const pr = lerp(1, .7, m);
+  X.font = '700 5px Mono'; X.fillStyle = 'rgba(190,210,230,.85)'; X.textAlign = 'left'; X.fillText('TUNNEL PRESSURE', 30, 430);
+  X.fillStyle = HUDBG; X.fillRect(30, 436, 300, 10); X.fillStyle = `rgb(${Math.round(lerp(255, 56, m))},${Math.round(lerp(60, 198, m))},${Math.round(lerp(40, 255, m))})`; X.fillRect(30, 436, 300 * pr, 10);
+  hud(t, a + .1, 'WIND TUNNEL · NOSE TESTS', [['DESIGN', 'PROTOTYPE ' + String(pass).padStart(2, '0')], ['SHAPE', m > .9 ? 'KINGFISHER' : m > .4 ? 'TAPERING' : 'BLUNT', m > .9 ? YEL : null]], { w: 88 });
+}
+function sResult(t) {
+  const a = SCN.result[0], p = eo(seg(t, a, a + 1.2));
+  glow(180, 300, 200, 'rgba(56,198,255,A)', .12);
+  speedLines(t, 270, 330, .7 * (1 - p * .5));
+  const x = lerp(420, 330, p);
+  train(x, 310, 1, { m: 1, nl: 150, L: 220 });
+  hud(t, a + .1, 'RESULT · JR WEST', [['MODEL', '500 SERIES'], ['IN SERVICE', '1997']]);
+  const w = wordT(15, '15'); if (t > w - .1) {
+    const q = eo(seg(t, w - .1, w + .5)), nx0 = x - 150, y = 260;
+    X.strokeStyle = YEL; X.lineWidth = .8; P(() => { X.moveTo(nx0, y); X.lineTo(lerp(nx0, x, q), y); X.moveTo(nx0, y - 4); X.lineTo(nx0, y + 4); }); X.stroke();
+    if (q > .95) { P(() => { X.moveTo(x, y - 4); X.lineTo(x, y + 4); }); X.stroke(); }
+    bigNum(t, w - .1, 15, ' m', (nx0 + x) / 2, 246, 30, YEL, 'nose length');
+  }
+}
+function sStats(t) {
+  const a = SCN.stats[0];
+  train(300, 120, .55, { m: 1, nl: 150, L: 260 });
+  const rows = [[16, 30, '−', 'AIR PRESSURE', '#38c6ff', -1], [17, 15, '−', 'ELECTRICITY', YEL, -1], [18, 10, '+', 'SPEED', ORANGE, 1]];
+  rows.forEach(([li, val, sign, label, col, dir], k) => {
+    const w = li === 18 ? wordT(18, '10') : va(li) - .05, y = 230 + k * 92;
+    if (t < w) return;
+    const p = eo(seg(t, w, w + .8));
+    bigNum(t, w, val, '%', 40, y, 40, col, null, { prefix: sign, align: 'left' });
+    X.font = '700 6px Mono'; X.fillStyle = 'rgba(220,230,240,.85)'; X.textAlign = 'left'; X.globalAlpha = p; X.fillText(label, 40, y + 14);
+    const base = 180, before = 1, after = before * (1 + dir * val / 100);
+    X.fillStyle = 'rgba(120,130,140,.5)'; X.fillRect(180, y - 24, base, 8); X.fillStyle = col; X.fillRect(180, y - 12, base * lerp(before, after, p), 8);
+    X.font = '700 4.4px Mono'; X.fillStyle = 'rgba(200,210,220,.7)'; X.fillText('BEFORE', 180, y - 27); X.fillText('500 SERIES', 180, y + 4); X.globalAlpha = 1;
+  });
+  hud(t, a + .1, 'PERFORMANCE · VS PREVIOUS SERIES', [['SOURCE', 'E. NAKATSU, 2005']], { w: 92 });
+}
+function sFinale(t) {
+  const a = SCN.finale[0], p = ease(seg(t, a, a + 1.4));
+  glow(180, 280, 200, 'rgba(56,198,255,A)', .15);
+  train(lerp(330, 300, p), 330, 1, { m: 1, nl: 150, L: 220 });
+  kingfisher(lerp(120, 105, p), 238, 1.9, {});
+  X.save(); X.globalAlpha = p * .8; X.strokeStyle = CYAN; X.setLineDash([3, 3]); X.lineWidth = .9;
+  P(() => { X.moveTo(105 + 58 * 1.9, 238 - 6.5 * 1.9); X.lineTo(lerp(330, 300, p), 330 - 1); }); X.stroke(); X.setLineDash([]); X.restore();
+  const lk = wordT(20, 'look');
+  if (t > lk) { const q = eo(seg(t, lk, lk + 1)); glow(105 + 22 * 1.9, 238 - 14 * 1.9, 30 + 30 * q, 'rgba(255,210,31,A)', .5 * (1 - q * .4)); }
+  hud(t, a + .1, 'BIOMIMICRY', [['NATURE', 'KINGFISHER'], ['DESIGN', '500 SERIES', YEL]]);
+}
+const SC = [['train', sTrain], ['tunnel', sTunnel], ['houses', sHouses], ['engineer', sEngineer], ['bird', sBird], ['dive', sDive], ['beak', sBeak], ['test', sTest], ['result', sResult], ['stats', sStats], ['finale', sFinale]].map(([k, f]) => ({ a: SCN[k][0], b: SCN[k][1], f, k }));
+const SHAKE = () => { const b = wordT(2, 'boom'); return 1 - seg(T_NOW, b, b + .6); };
+let T_NOW = 0;
+// framing per scene: [zoom, centre x, centre y] (the subject sits in the upper-middle; captions below)
+const FRAME = { train: [1.6, 200, 300], tunnel: [1.35, 160, 285], houses: [1.4, 190, 305], engineer: [1.25, 190, 290], bird: [1.05, 180, 275], dive: [1, 180, 300], beak: [1, 180, 300], test: [1.15, 180, 310], result: [1.4, 250, 295], stats: [1, 180, 300], finale: [1.25, 200, 290] };
+
+// ---------------- captions: 2–3 words at a time, keyword big and yellow ----------------
+const CHUNKS = [];
+TL.caps.forEach((cap, i) => {
+  // re-scan highlight flags precisely
+  let inside = false; const ws = cap.split(' ').map(raw => { const st = raw.replace(/^“/, '').startsWith('*'); if (st) inside = true; const flag = inside; if (raw.replace(/[.,!?”’]+$/, '').endsWith('*')) inside = false; return [raw.replace(/\*/g, ''), flag]; });
+  const text = ws.map(w => w[0]).join(' '), [a, b] = V[i];
+  let cur = []; const groups = [];
+  ws.forEach((w, k) => { const prevHl = cur.length && cur[cur.length - 1][1]; if (cur.length && ((w[1] && !prevHl) || (!w[1] && prevHl) || (!w[1] && cur.length >= 3))) { groups.push(cur); cur = []; } cur.push(w); });
+  if (cur.length) groups.push(cur);
+  let pos = 0;
+  groups.forEach((g, gi) => {
+    const s = g.map(w => w[0]).join(' '), k0 = text.indexOf(s, pos); pos = k0 + s.length;
+    const t0 = a + (b - a) * (k0 / text.length) * .97 - .05;
+    CHUNKS.push({ i, t0, words: g, hl: g[0][1] });
+  });
+});
+CHUNKS.forEach((c, k) => { const n = CHUNKS[k + 1]; c.t1 = n && n.i === c.i ? n.t0 : Math.min(CT[c.i][1], n ? n.t0 : DUR); });
+function caption(t) {
+  const k = CHUNKS.findIndex(c => t >= c.t0 && t < c.t1); if (k < 0) return;
+  const c = CHUNKS[k], prev = CHUNKS[k - 1];
+  const showPrev = c.hl && prev && prev.i === c.i && !prev.hl;   // "This creature has / 16": the lead-in stays above the keyword
+  const y = 430;
+  X.save(); X.textAlign = 'center'; X.textBaseline = 'alphabetic';
+  if (showPrev) { X.font = '500 14px Play'; X.fillStyle = '#f2f2f2'; X.fillText(prev.words.map(w => w[0]).join(' '), 180, y - 20); }
+  const p = eo(seg(t, c.t0, c.t0 + .15));
+  if (c.hl) { X.font = '25px Arch'; X.fillStyle = YEL; X.shadowColor = 'rgba(255,210,31,.5)'; X.shadowBlur = 10; X.fillText(c.words.map(w => w[0]).join(' '), 180, y + 6 + (1 - p) * 4); }
+  else { X.font = '500 14px Play'; X.fillStyle = '#f2f2f2'; X.shadowColor = 'rgba(0,0,0,.9)'; X.shadowBlur = 6; X.fillText(c.words.map(w => w[0]).join(' '), 180, y + (1 - p) * 3); }
+  X.restore();
+}
+
+const grainC = Array.from({ length: 4 }, (_, k) => { const g = document.createElement('canvas'); g.width = 360; g.height = 640; const gx = g.getContext('2d'), im = gx.createImageData(360, 640), r = rng(50 + k); for (let i = 0; i < im.data.length; i += 4) { const v = r() * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 10; } gx.putImageData(im, 0, 0); return g; });
+function render(t) {
+  T_NOW = t;
+  X.setTransform(1, 0, 0, 1, 0, 0); X.fillStyle = '#000'; X.fillRect(0, 0, C.width, C.height);
+  X.setTransform(S, 0, 0, S, 0, 0);
+  const sc = SC.find(s => t >= s.a && t < s.b) || SC[SC.length - 1], lt = t - sc.a, d = sc.b - sc.a;
+  const sh = sc.k === 'tunnel' ? SHAKE() : 0;
+  X.save();
+  if (sh > 0 && sh < 1) X.translate(Math.sin(t * 90) * 3 * sh, Math.cos(t * 77) * 3 * sh);
+  const F = FRAME[sc.k] || [1, 180, 320], z = F[0] * lerp(1, 1.04, lt / d); X.translate(180, 300); X.scale(z, z); X.translate(-F[1], -F[2]);
+  HUDQ = []; sc.f(t);
+  X.restore();
+  X.save(); X.scale(1.6, 1.6); HUDQ.forEach(a => hudDraw(...a)); X.restore();
+  // vignette, fades, captions, grain
+  const v = X.createRadialGradient(180, 300, 150, 180, 320, 420); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.75)'); X.fillStyle = v; X.fillRect(0, 0, W, H);
+  const fin = sc.a === 0 ? seg(lt, 0, .5) : seg(lt, 0, .18), fout = sc.b >= DUR ? 1 - seg(t, DUR - .8, DUR) : 1 - seg(lt, d - .18, d);
+  const fa = 1 - Math.min(fin, fout); if (fa > 0) { X.fillStyle = `rgba(0,0,0,${fa})`; X.fillRect(0, 0, W, H); }
+  caption(t);
+  X.drawImage(grainC[Math.floor(t * 24) % 4], 0, 0);
+}
+window.DURATION = DUR;
+window.ready = (async () => { await document.fonts.load('500 13px Play'); await document.fonts.load('22px Arch'); await document.fonts.load('700 6px Mono'); await document.fonts.ready; render(0); return true; })();
+window.frame = (t, q = .9) => { render(t); return C.toDataURL('image/jpeg', q); };
+</script>
+</body>
+</html>

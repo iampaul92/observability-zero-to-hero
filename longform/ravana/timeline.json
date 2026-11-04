@@ -1,0 +1,1427 @@
+{
+ "dur": 485.06,
+ "voice": [
+  [
+   1.2,
+   4.313
+  ],
+  [
+   4.733,
+   8.705
+  ],
+  [
+   9.125,
+   11.916
+  ],
+  [
+   12.336,
+   14.489
+  ],
+  [
+   15.239,
+   18.9
+  ],
+  [
+   19.32,
+   21.789
+  ],
+  [
+   22.209,
+   24.828
+  ],
+  [
+   26.078,
+   29.062
+  ],
+  [
+   30.362,
+   34.391
+  ],
+  [
+   34.811,
+   38.292
+  ],
+  [
+   38.712,
+   41.33
+  ],
+  [
+   42.08,
+   46.585
+  ],
+  [
+   47.005,
+   50.448
+  ],
+  [
+   50.868,
+   54.217
+  ],
+  [
+   54.637,
+   59.605
+  ],
+  [
+   60.355,
+   63.048
+  ],
+  [
+   63.468,
+   67.083
+  ],
+  [
+   67.503,
+   70.859
+  ],
+  [
+   71.279,
+   75.889
+  ],
+  [
+   77.139,
+   79.039
+  ],
+  [
+   80.339,
+   84.753
+  ],
+  [
+   85.173,
+   86.882
+  ],
+  [
+   87.302,
+   93.013
+  ],
+  [
+   93.433,
+   97.023
+  ],
+  [
+   97.773,
+   101.281
+  ],
+  [
+   101.701,
+   103.794
+  ],
+  [
+   104.214,
+   110.096
+  ],
+  [
+   110.516,
+   113.049
+  ],
+  [
+   113.469,
+   116.639
+  ],
+  [
+   117.059,
+   119.525
+  ],
+  [
+   120.275,
+   125.763
+  ],
+  [
+   126.183,
+   129.521
+  ],
+  [
+   129.941,
+   135.351
+  ],
+  [
+   136.601,
+   139.167
+  ],
+  [
+   140.467,
+   143.302
+  ],
+  [
+   143.722,
+   146.594
+  ],
+  [
+   147.344,
+   153.128
+  ],
+  [
+   153.548,
+   157.976
+  ],
+  [
+   158.396,
+   163.574
+  ],
+  [
+   164.324,
+   171.491
+  ],
+  [
+   171.911,
+   174.788
+  ],
+  [
+   175.208,
+   178.31
+  ],
+  [
+   178.73,
+   182.332
+  ],
+  [
+   182.752,
+   187.148
+  ],
+  [
+   187.568,
+   193.474
+  ],
+  [
+   194.224,
+   197.464
+  ],
+  [
+   197.884,
+   201.147
+  ],
+  [
+   201.567,
+   205.685
+  ],
+  [
+   206.105,
+   209.647
+  ],
+  [
+   210.897,
+   213.716
+  ],
+  [
+   215.016,
+   219.602
+  ],
+  [
+   220.022,
+   223.149
+  ],
+  [
+   223.569,
+   229.217
+  ],
+  [
+   229.637,
+   233.022
+  ],
+  [
+   233.772,
+   238.75
+  ],
+  [
+   239.17,
+   243.414
+  ],
+  [
+   243.834,
+   246.906
+  ],
+  [
+   247.656,
+   250.525
+  ],
+  [
+   250.945,
+   253.537
+  ],
+  [
+   253.957,
+   258.907
+  ],
+  [
+   260.157,
+   262.727
+  ],
+  [
+   264.027,
+   270.288
+  ],
+  [
+   270.708,
+   274.878
+  ],
+  [
+   275.298,
+   280.172
+  ],
+  [
+   280.922,
+   284.323
+  ],
+  [
+   284.743,
+   288.1
+  ],
+  [
+   288.52,
+   293.334
+  ],
+  [
+   294.084,
+   299.054
+  ],
+  [
+   299.474,
+   303.526
+  ],
+  [
+   304.276,
+   307.966
+  ],
+  [
+   308.386,
+   311.395
+  ],
+  [
+   311.815,
+   315.294
+  ],
+  [
+   316.044,
+   320.647
+  ],
+  [
+   321.067,
+   324.48
+  ],
+  [
+   324.9,
+   326.641
+  ],
+  [
+   327.061,
+   331.603
+  ],
+  [
+   332.853,
+   334.92
+  ],
+  [
+   336.22,
+   340.375
+  ],
+  [
+   340.795,
+   343.59
+  ],
+  [
+   344.01,
+   347.238
+  ],
+  [
+   347.658,
+   350.925
+  ],
+  [
+   351.675,
+   355.898
+  ],
+  [
+   356.318,
+   359.42
+  ],
+  [
+   360.17,
+   364.777
+  ],
+  [
+   365.527,
+   369.18
+  ],
+  [
+   369.6,
+   372.498
+  ],
+  [
+   372.918,
+   376.796
+  ],
+  [
+   377.546,
+   381.165
+  ],
+  [
+   381.585,
+   385.627
+  ],
+  [
+   386.877,
+   388.947
+  ],
+  [
+   390.247,
+   392.757
+  ],
+  [
+   393.177,
+   397.873
+  ],
+  [
+   398.293,
+   400.705
+  ],
+  [
+   401.455,
+   404.363
+  ],
+  [
+   404.783,
+   408.449
+  ],
+  [
+   408.869,
+   411.334
+  ],
+  [
+   411.754,
+   414.654
+  ],
+  [
+   415.404,
+   422.16
+  ],
+  [
+   422.58,
+   425.764
+  ],
+  [
+   426.514,
+   430.049
+  ],
+  [
+   430.469,
+   433.582
+  ],
+  [
+   434.002,
+   436.964
+  ],
+  [
+   437.384,
+   440.225
+  ],
+  [
+   440.645,
+   443.527
+  ],
+  [
+   443.947,
+   447.833
+  ],
+  [
+   448.583,
+   452.405
+  ],
+  [
+   452.825,
+   458.061
+  ],
+  [
+   458.481,
+   464.775
+  ],
+  [
+   465.195,
+   469.478
+  ],
+  [
+   469.898,
+   473.957
+  ],
+  [
+   474.707,
+   479.063
+  ]
+ ],
+ "ct": [
+  [
+   1.15,
+   4.683
+  ],
+  [
+   4.683,
+   9.075
+  ],
+  [
+   9.075,
+   12.286
+  ],
+  [
+   12.286,
+   14.989
+  ],
+  [
+   15.189,
+   19.27
+  ],
+  [
+   19.27,
+   22.159
+  ],
+  [
+   22.159,
+   25.328
+  ],
+  [
+   26.028,
+   29.562
+  ],
+  [
+   30.312,
+   34.761
+  ],
+  [
+   34.761,
+   38.662
+  ],
+  [
+   38.662,
+   41.83
+  ],
+  [
+   42.03,
+   46.955
+  ],
+  [
+   46.955,
+   50.818
+  ],
+  [
+   50.818,
+   54.587
+  ],
+  [
+   54.587,
+   60.105
+  ],
+  [
+   60.305,
+   63.418
+  ],
+  [
+   63.418,
+   67.453
+  ],
+  [
+   67.453,
+   71.229
+  ],
+  [
+   71.229,
+   76.389
+  ],
+  [
+   77.089,
+   79.539
+  ],
+  [
+   80.289,
+   85.123
+  ],
+  [
+   85.123,
+   87.252
+  ],
+  [
+   87.252,
+   93.383
+  ],
+  [
+   93.383,
+   97.523
+  ],
+  [
+   97.723,
+   101.651
+  ],
+  [
+   101.651,
+   104.164
+  ],
+  [
+   104.164,
+   110.466
+  ],
+  [
+   110.466,
+   113.419
+  ],
+  [
+   113.419,
+   117.009
+  ],
+  [
+   117.009,
+   120.025
+  ],
+  [
+   120.225,
+   126.133
+  ],
+  [
+   126.133,
+   129.891
+  ],
+  [
+   129.891,
+   135.851
+  ],
+  [
+   136.551,
+   139.667
+  ],
+  [
+   140.417,
+   143.672
+  ],
+  [
+   143.672,
+   147.094
+  ],
+  [
+   147.294,
+   153.498
+  ],
+  [
+   153.498,
+   158.346
+  ],
+  [
+   158.346,
+   164.074
+  ],
+  [
+   164.274,
+   171.861
+  ],
+  [
+   171.861,
+   175.158
+  ],
+  [
+   175.158,
+   178.68
+  ],
+  [
+   178.68,
+   182.702
+  ],
+  [
+   182.702,
+   187.518
+  ],
+  [
+   187.518,
+   193.974
+  ],
+  [
+   194.174,
+   197.834
+  ],
+  [
+   197.834,
+   201.517
+  ],
+  [
+   201.517,
+   206.055
+  ],
+  [
+   206.055,
+   210.147
+  ],
+  [
+   210.847,
+   214.216
+  ],
+  [
+   214.966,
+   219.972
+  ],
+  [
+   219.972,
+   223.519
+  ],
+  [
+   223.519,
+   229.587
+  ],
+  [
+   229.587,
+   233.522
+  ],
+  [
+   233.722,
+   239.12
+  ],
+  [
+   239.12,
+   243.784
+  ],
+  [
+   243.784,
+   247.406
+  ],
+  [
+   247.606,
+   250.895
+  ],
+  [
+   250.895,
+   253.907
+  ],
+  [
+   253.907,
+   259.407
+  ],
+  [
+   260.107,
+   263.227
+  ],
+  [
+   263.977,
+   270.658
+  ],
+  [
+   270.658,
+   275.248
+  ],
+  [
+   275.248,
+   280.672
+  ],
+  [
+   280.872,
+   284.693
+  ],
+  [
+   284.693,
+   288.47
+  ],
+  [
+   288.47,
+   293.834
+  ],
+  [
+   294.034,
+   299.424
+  ],
+  [
+   299.424,
+   304.026
+  ],
+  [
+   304.226,
+   308.336
+  ],
+  [
+   308.336,
+   311.765
+  ],
+  [
+   311.765,
+   315.794
+  ],
+  [
+   315.994,
+   321.017
+  ],
+  [
+   321.017,
+   324.85
+  ],
+  [
+   324.85,
+   327.011
+  ],
+  [
+   327.011,
+   332.103
+  ],
+  [
+   332.803,
+   335.42
+  ],
+  [
+   336.17,
+   340.745
+  ],
+  [
+   340.745,
+   343.96
+  ],
+  [
+   343.96,
+   347.608
+  ],
+  [
+   347.608,
+   351.425
+  ],
+  [
+   351.625,
+   356.268
+  ],
+  [
+   356.268,
+   359.92
+  ],
+  [
+   360.12,
+   365.277
+  ],
+  [
+   365.477,
+   369.55
+  ],
+  [
+   369.55,
+   372.868
+  ],
+  [
+   372.868,
+   377.296
+  ],
+  [
+   377.496,
+   381.535
+  ],
+  [
+   381.535,
+   386.127
+  ],
+  [
+   386.827,
+   389.447
+  ],
+  [
+   390.197,
+   393.127
+  ],
+  [
+   393.127,
+   398.243
+  ],
+  [
+   398.243,
+   401.205
+  ],
+  [
+   401.405,
+   404.733
+  ],
+  [
+   404.733,
+   408.819
+  ],
+  [
+   408.819,
+   411.704
+  ],
+  [
+   411.704,
+   415.154
+  ],
+  [
+   415.354,
+   422.53
+  ],
+  [
+   422.53,
+   426.264
+  ],
+  [
+   426.464,
+   430.419
+  ],
+  [
+   430.419,
+   433.952
+  ],
+  [
+   433.952,
+   437.334
+  ],
+  [
+   437.334,
+   440.595
+  ],
+  [
+   440.595,
+   443.897
+  ],
+  [
+   443.897,
+   448.333
+  ],
+  [
+   448.533,
+   452.775
+  ],
+  [
+   452.775,
+   458.431
+  ],
+  [
+   458.431,
+   465.145
+  ],
+  [
+   465.145,
+   469.848
+  ],
+  [
+   469.848,
+   474.457
+  ],
+  [
+   474.657,
+   479.563
+  ]
+ ],
+ "scenes": [
+  {
+   "key": "hook",
+   "ch": 0,
+   "a": 0,
+   "first": 0,
+   "last": 3,
+   "b": 14.839
+  },
+  {
+   "key": "hook2",
+   "ch": 0,
+   "a": 14.839,
+   "first": 4,
+   "last": 6,
+   "b": 25.678
+  },
+  {
+   "key": "card",
+   "ch": 1,
+   "a": 25.678,
+   "first": 7,
+   "last": 7,
+   "b": 29.962
+  },
+  {
+   "key": "birth",
+   "ch": 1,
+   "a": 29.962,
+   "first": 8,
+   "last": 10,
+   "b": 41.68
+  },
+  {
+   "key": "kubera",
+   "ch": 1,
+   "a": 41.68,
+   "first": 11,
+   "last": 14,
+   "b": 59.955
+  },
+  {
+   "key": "brothers",
+   "ch": 1,
+   "a": 59.955,
+   "first": 15,
+   "last": 18,
+   "b": 76.739
+  },
+  {
+   "key": "card",
+   "ch": 2,
+   "a": 76.739,
+   "first": 19,
+   "last": 19,
+   "b": 79.939
+  },
+  {
+   "key": "penance",
+   "ch": 2,
+   "a": 79.939,
+   "first": 20,
+   "last": 23,
+   "b": 97.373
+  },
+  {
+   "key": "brahma",
+   "ch": 2,
+   "a": 97.373,
+   "first": 24,
+   "last": 29,
+   "b": 119.875
+  },
+  {
+   "key": "kumbha",
+   "ch": 2,
+   "a": 119.875,
+   "first": 30,
+   "last": 32,
+   "b": 136.201
+  },
+  {
+   "key": "card",
+   "ch": 3,
+   "a": 136.201,
+   "first": 33,
+   "last": 33,
+   "b": 140.067
+  },
+  {
+   "key": "lanka",
+   "ch": 3,
+   "a": 140.067,
+   "first": 34,
+   "last": 35,
+   "b": 146.944
+  },
+  {
+   "key": "pushpaka",
+   "ch": 3,
+   "a": 146.944,
+   "first": 36,
+   "last": 38,
+   "b": 163.924
+  },
+  {
+   "key": "kailash",
+   "ch": 3,
+   "a": 163.924,
+   "first": 39,
+   "last": 44,
+   "b": 193.824
+  },
+  {
+   "key": "scholar",
+   "ch": 3,
+   "a": 193.824,
+   "first": 45,
+   "last": 48,
+   "b": 210.497
+  },
+  {
+   "key": "card",
+   "ch": 4,
+   "a": 210.497,
+   "first": 49,
+   "last": 49,
+   "b": 214.616
+  },
+  {
+   "key": "forest",
+   "ch": 4,
+   "a": 214.616,
+   "first": 50,
+   "last": 53,
+   "b": 233.372
+  },
+  {
+   "key": "surpanakha",
+   "ch": 4,
+   "a": 233.372,
+   "first": 54,
+   "last": 56,
+   "b": 247.256
+  },
+  {
+   "key": "court",
+   "ch": 4,
+   "a": 247.256,
+   "first": 57,
+   "last": 59,
+   "b": 259.757
+  },
+  {
+   "key": "card",
+   "ch": 5,
+   "a": 259.757,
+   "first": 60,
+   "last": 60,
+   "b": 263.627
+  },
+  {
+   "key": "maricha",
+   "ch": 5,
+   "a": 263.627,
+   "first": 61,
+   "last": 63,
+   "b": 280.522
+  },
+  {
+   "key": "deer",
+   "ch": 5,
+   "a": 280.522,
+   "first": 64,
+   "last": 66,
+   "b": 293.684
+  },
+  {
+   "key": "abduct",
+   "ch": 5,
+   "a": 293.684,
+   "first": 67,
+   "last": 68,
+   "b": 303.876
+  },
+  {
+   "key": "jatayu",
+   "ch": 5,
+   "a": 303.876,
+   "first": 69,
+   "last": 71,
+   "b": 315.644
+  },
+  {
+   "key": "ashoka",
+   "ch": 5,
+   "a": 315.644,
+   "first": 72,
+   "last": 75,
+   "b": 332.453
+  },
+  {
+   "key": "card",
+   "ch": 6,
+   "a": 332.453,
+   "first": 76,
+   "last": 76,
+   "b": 335.82
+  },
+  {
+   "key": "warn",
+   "ch": 6,
+   "a": 335.82,
+   "first": 77,
+   "last": 80,
+   "b": 351.275
+  },
+  {
+   "key": "hanuman",
+   "ch": 6,
+   "a": 351.275,
+   "first": 81,
+   "last": 82,
+   "b": 359.77
+  },
+  {
+   "key": "bridge",
+   "ch": 6,
+   "a": 359.77,
+   "first": 83,
+   "last": 83,
+   "b": 365.127
+  },
+  {
+   "key": "kumbha2",
+   "ch": 6,
+   "a": 365.127,
+   "first": 84,
+   "last": 86,
+   "b": 377.146
+  },
+  {
+   "key": "bridge",
+   "ch": 6,
+   "a": 377.146,
+   "first": 87,
+   "last": 88,
+   "b": 386.477
+  },
+  {
+   "key": "card",
+   "ch": 7,
+   "a": 386.477,
+   "first": 89,
+   "last": 89,
+   "b": 389.847
+  },
+  {
+   "key": "war",
+   "ch": 7,
+   "a": 389.847,
+   "first": 90,
+   "last": 92,
+   "b": 401.055
+  },
+  {
+   "key": "duel",
+   "ch": 7,
+   "a": 401.055,
+   "first": 93,
+   "last": 96,
+   "b": 415.004
+  },
+  {
+   "key": "lesson",
+   "ch": 8,
+   "a": 415.004,
+   "first": 97,
+   "last": 98,
+   "b": 426.114
+  },
+  {
+   "key": "lesson2",
+   "ch": 8,
+   "a": 426.114,
+   "first": 99,
+   "last": 104,
+   "b": 448.183
+  },
+  {
+   "key": "lesson3",
+   "ch": 8,
+   "a": 448.183,
+   "first": 105,
+   "last": 109,
+   "b": 474.307
+  },
+  {
+   "key": "outro",
+   "ch": 8,
+   "a": 474.307,
+   "first": 110,
+   "last": 110,
+   "b": 485.06
+  }
+ ],
+ "caps": [
+  "He had *ten heads*, and a city made of *gold*.",
+  "He was a scholar. A musician. A devotee of *Shiva*.",
+  "The gods themselves could not *kill* him.",
+  "And yet he lost *everything*.",
+  "Not because he lacked knowledge, or power, or courage…",
+  "…but because of *one blind spot*.",
+  "This is the story of *Ravana*.",
+  "Chapter one. *Born between two worlds*.",
+  "Ravana was the eldest son of a wise sage, *Vishrava*,",
+  "and a princess of the rakshasas, *Kaikasi*.",
+  "Her father, Sumali, had a plan.",
+  "The sage already had a famous son: *Kubera*, the god of wealth,",
+  "who ruled a shining island city called *Lanka*.",
+  "Sumali wanted grandsons who could *rival* him.",
+  "And Ravana grew up with one question burning inside him: *why not me?*",
+  "He was not alone. He had two brothers.",
+  "*Kumbhakarna*, a giant with an endless appetite,",
+  "and *Vibhishana*, gentle, honest and wise.",
+  "Three brothers. Three very different hearts. Keep an eye on all three.",
+  "Chapter two. *The boon*.",
+  "So Ravana went into the forest, and began a *penance* so fierce",
+  "that it shook the heavens.",
+  "The later books say he cut off his own heads, one by one, and offered them to the *fire*.",
+  "Nine heads. And as he raised his sword to the *tenth*…",
+  "At last, *Brahma*, the creator, appeared before him.",
+  "“Ask for anything,” he said.",
+  "Ravana asked never to be killed by *gods*, or *demons*, or any celestial being.",
+  "But he did not bother to name *humans*.",
+  "Humans were weak. Small. Not worth a thought.",
+  "Remember that. It will matter *later*.",
+  "His brothers prayed too. Tradition says Kumbhakarna meant to ask for endless *power*,",
+  "but his tongue slipped, and he asked for endless *sleep*.",
+  "Vibhishana asked for only one thing: that he would never *stray from what is right*.",
+  "Chapter three. *The king of Lanka*.",
+  "With his boon, Ravana marched on Lanka,",
+  "and drove out his own half-brother, *Kubera*.",
+  "He took the city of gold. He took the *Pushpaka*, a chariot that flew through the sky.",
+  "Kings bowed. Armies fled. Even the gods kept their distance.",
+  "He married *Mandodari*, wise and devoted, and Lanka grew richer than ever.",
+  "The later books of the Ramayana tell how, in his pride, he tried to lift *Mount Kailash*, Shiva’s own home.",
+  "Shiva simply pressed down with *one toe*,",
+  "and pinned Ravana beneath the mountain.",
+  "Trapped, Ravana did the one thing he could. He *sang*.",
+  "He sang to Shiva with such devotion that Shiva *forgave* him.",
+  "Tradition says that song became the *Shiva Tandava Stotram*, still chanted today.",
+  "This was Ravana: proud enough to lift a mountain,",
+  "and *wise* enough to sing his way out from under it.",
+  "A brilliant mind. A great devotee. A powerful king.",
+  "But he had begun to respect only one thing: *power*.",
+  "Chapter four. *A meeting in the forest*.",
+  "Far away, a prince named *Rama* lived in exile in the forest,",
+  "He was the eldest son of the king of *Ayodhya*,",
+  "sent into the forest for *fourteen years* to keep his father’s promise to a stepmother.",
+  "with his wife, *Sita*, and his brother, *Lakshmana*.",
+  "Ravana’s sister, *Shurpanakha*, saw Rama, and wanted him for herself.",
+  "Rejected, she attacked Sita, and Lakshmana *cut off her nose*.",
+  "She fled to her brother, wounded and furious.",
+  "Ravana could have asked what *really* happened.",
+  "Instead, he heard only an *insult*.",
+  "And he heard something else: the name of a woman of *unmatched beauty*. Sita.",
+  "Chapter five. *The golden deer*.",
+  "Ravana went to an old demon, *Maricha*, who had already met Rama once, and barely survived.",
+  "“Don’t do this,” Maricha warned. “Rama will be the *end of you*.”",
+  "It was the *first warning*. Ravana threatened to kill him if he refused.",
+  "So Maricha took the form of a *golden deer*.",
+  "Sita saw it, and asked Rama to *catch* it for her.",
+  "Rama followed it deep into the forest. Then Lakshmana went after him.",
+  "And when Sita was *alone*, Ravana came, disguised as a holy man.",
+  "He seized her, and carried her into the sky on the Pushpaka.",
+  "An old vulture king, *Jatayu*, flew up to stop him.",
+  "He fought with everything he had, and *fell*.",
+  "But before he died, he told Rama *where she had gone*.",
+  "In Lanka, Ravana kept Sita in a garden of *Ashoka* trees.",
+  "He offered her his gold, his city, his throne.",
+  "She would not even *look* at him.",
+  "For the first time, Ravana wanted something that power could not *take*.",
+  "Chapter six. *Warnings*.",
+  "In Lanka, Ravana’s own brother, *Vibhishana*, begged him:",
+  "“Return Sita. This will destroy us.”",
+  "Ravana called him a *traitor*, and threw him out.",
+  "Vibhishana crossed the sea, and joined *Rama*.",
+  "A monkey named *Hanuman* leapt across the ocean, found Sita,",
+  "and set Ravana’s golden city *on fire*.",
+  "Then an army of monkeys and bears built a *bridge* across the sea.",
+  "They even woke *Kumbhakarna* from his long sleep.",
+  "He told his brother plainly: “You were *wrong*.”",
+  "And then, out of loyalty, he went to *fight* for him anyway.",
+  "Every warning was there. Ravana saw only *weakness*.",
+  "A human prince. An army of animals. *Nothing to fear*.",
+  "Chapter seven. *The fall*.",
+  "The war was long and terrible.",
+  "Ravana lost his brother, *Kumbhakarna*, and his son, *Indrajit*.",
+  "And still he would not *give her back*.",
+  "At last, Ravana faced Rama himself.",
+  "The king who could not be killed by gods, or demons,",
+  "fell to the arrow of a *human*.",
+  "The one being he had called *too small to matter*.",
+  "A later folk tradition says that as Ravana lay dying, Rama sent Lakshmana to *learn* from him.",
+  "Because even at the end, he was a *great scholar*.",
+  "Ravana wasn’t defeated by a lack of *knowledge*.",
+  "He was defeated by what he *refused to see*.",
+  "He respected power, and ignored *people*.",
+  "He heard insults, and ignored *warnings*.",
+  "He protected himself from everything big,",
+  "and left himself open to the thing he thought was *small*.",
+  "So ask yourself: what are you calling *too small to matter*?",
+  "A person you overlook. A warning you dismiss. A habit you think can’t hurt you.",
+  "The colleague you never listen to. The small cough you ignore. The friend who keeps saying, “*be careful*.”",
+  "Knowledge can make you powerful. Only *humility* keeps you safe.",
+  "Ten heads could not save Ravana from *one blind spot*.",
+  "If this story made you think, *subscribe*. There are many more to tell."
+ ],
+ "chapters": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  4,
+  4,
+  4,
+  4,
+  4,
+  4,
+  4,
+  4,
+  4,
+  4,
+  4,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  7,
+  7,
+  7,
+  7,
+  7,
+  7,
+  7,
+  7,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8,
+  8
+ ]
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Ravana thumbnail</title>
+<style>
+  @font-face { font-family: Cinzel; font-weight: 700; src: url(fonts/Cinzel-Bold.woff); }
+  @font-face { font-family: CinzelDeco; font-weight: 700; src: url(fonts/CinzelDecorative-Bold.woff); }
+  html, body { margin: 0; background: #000; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>window.TL = { voice: [[0, 1]], ct: [], caps: [''], scenes: [], dur: 1 };</script>
+<script src="engine.js"></script>
+<script src="rigs_from_arjuna.js"></script>
+<script src="chars.js"></script>
+<script>
+// 1280x720 YouTube thumbnail: Ravana big on the left over burning gold, one bold line, a "blind spot" mark.
+(async () => {
+  await document.fonts.load('700 40px CinzelDeco'); await document.fonts.load('700 40px Cinzel');
+  const k = 1280 / 640;
+  X.setTransform(k, 0, 0, k, 0, 0);
+  const g = X.createLinearGradient(0, 0, 0, 360); g.addColorStop(0, '#1a0608'); g.addColorStop(.6, '#5a1a10'); g.addColorStop(1, '#120404');
+  X.fillStyle = g; X.fillRect(0, 0, 640, 360);
+  glow(200, 200, 260, '#ff7a2a', .45);
+  // Ravana, large
+  X.save(); X.translate(165, 470); X.scale(2.1, 2.1); X.translate(-165, -470); ravana(165, 470, 1, { heads: 10, angry: true, rods: false }); X.restore();
+  // blind spot ring on the central head
+  X.strokeStyle = '#ffd21f'; X.lineWidth = 4; X.shadowColor = '#ffd21f'; X.shadowBlur = 12;
+  X.beginPath(); X.arc(165, 172, 27, 0, Math.PI * 2); X.stroke(); X.shadowBlur = 0;
+  // text
+  X.textAlign = 'left'; X.textBaseline = 'alphabetic';
+  X.shadowColor = 'rgba(0,0,0,.9)'; X.shadowBlur = 10;
+  X.font = '700 54px Cinzel'; X.fillStyle = '#ffe08a'; X.fillText('10 HEADS', 360, 118);
+  X.fillStyle = '#ffffff'; X.fillText('1 BLIND', 360, 184); X.fillText('SPOT', 360, 250);
+  X.font = '700 18px Cinzel'; X.fillStyle = '#82d8c9'; X.fillText('THE FALL OF RAVANA', 364, 292);
+  // vignette
+  const v = X.createRadialGradient(320, 180, 150, 320, 180, 420); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.6)'); X.fillStyle = v; X.fillRect(0, 0, 640, 360);
+  window.done = true;
+})();
+</script>
+</body>
+</html>

@@ -17,9 +17,10 @@ LIB = os.environ.get('LIB', '/root/lemo-opuscar')
 
 def indianize(ph):
     ph = ph.replace('əʊ', 'oː').replace('eɪ', 'eː')            # pure vowels: "go" → goː, "day" → deː
-    ph = ph.replace('θ', 't').replace('ð', 'd')                 # dental th
+    ph = ph.replace('θ', '\u0001').replace('ð', '\u0002')       # hold "th" aside
     ph = re.sub(r't(?!ʃ)', 'ʈ', ph)                             # retroflex t (keep "ch")
     ph = re.sub(r'd(?!ʒ)', 'ɖ', ph)                             # retroflex d (keep "j")
+    ph = ph.replace('\u0001', 't').replace('\u0002', 'd')      # "th" becomes a soft, plain t / d
     ph = ph.replace('w', 'ʋ').replace('v', 'ʋ')                 # v/w blend
     ph = ph.replace('ɹ', 'ɾ')                                   # tapped r
     ph = ph.replace('æ', 'ɛ').replace('ɒ', 'ɔ')

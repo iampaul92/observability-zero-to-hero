@@ -37,13 +37,11 @@ function ravana(x, y, s, o = {}) {
   limb([[15, -126], [lerp(28, 32, ra), lerp(-106, -140, ra)], [hx, hy]], skin, 6.5);
   if (o.sword) { P(() => { X.moveTo(hx, hy); X.quadraticCurveTo(hx + 30, hy - 40 * (1 - ra) + 10 * ra, hx + 22, hy - 62); }); X.strokeStyle = SIL ? SILC : '#d8dde2'; X.lineWidth = 3; X.stroke(); glow(hx + 22, hy - 60, 12, '#cfe6ff', .4); }
   if (o.gift) { P(() => ell(hx + 6, hy - 4, 10, 6)); fs('#e9bb3a', '#8a5e16', .6); for (let i = 0; i < 4; i++) sparkle(hx + 2 + i * 4, hy - 10 - (i % 2) * 4, 2, .8); }
-  // heads: nine behind in a fan, the tenth in front
+  // heads: the classic row, four to one side and five to the other, the tenth in front
   const n = o.heads ?? 10, hr = 11;
-  const back = [];
-  for (let i = 0; i < 9; i++) back.push(-80 + i * 20);
-  const order = [0, 8, 1, 7, 2, 6, 3, 5, 4];   // the last ones offered are the outermost
-  const vis = new Set(order.slice(0, Math.max(0, n - 1)));
-  back.forEach((deg, i) => { if (!vis.has(i) || i === 4) return; const a = (deg - 90) * Math.PI / 180, R = 25; ravanaHead(Math.cos(a) * R * 1.25, -142 + Math.sin(a) * R * .55 + 10, hr * .78, o); });
+  const slots = [-4, 5, -3, 4, -2, 3, -1, 2, 1];   // offered from the outside in
+  const keep = new Set(slots.slice(Math.max(0, 9 - Math.max(0, n - 1))));
+  for (const k of [-4, -3, -2, -1, 1, 2, 3, 4, 5]) { if (!keep.has(k)) continue; ravanaHead(k * 15.5, -140 + Math.abs(k) * 1.6, hr * .8, o); }
   if (n >= 1) ravanaHead(0, -142, hr, o);
   X.restore();
   X.restore();
@@ -199,12 +197,12 @@ function shield(x, y, r, a, crack = 0) {   // the boon, drawn as a dome of light
   if (crack > 0) { X.strokeStyle = `rgba(255,255,255,${crack})`; X.lineWidth = 1.2; P(() => { X.moveTo(x - r * .72, y - r * .69); X.lineTo(x - r * .6, y - r * .55); X.lineTo(x - r * .66, y - r * .45); X.lineTo(x - r * .55, y - r * .32); }); X.stroke(); }
   X.restore();
 }
-function arrowFly(x0, y0, x1, y1, p, col = '#efe0b8') {
+function arrowFly(x0, y0, x1, y1, p, col = '#efe0b8', gl = 1) {
   if (p <= 0 || p >= 1) return;
   const x = lerp(x0, x1, p), y = lerp(y0, y1, p), a = Math.atan2(y1 - y0, x1 - x0), dv = [Math.cos(a), Math.sin(a)];
-  for (let i = 1; i < 8; i++) { X.strokeStyle = `rgba(255,226,150,${.4 * (1 - i / 8)})`; X.lineWidth = 2; P(() => { X.moveTo(x - dv[0] * i * 7, y - dv[1] * i * 7); X.lineTo(x - dv[0] * (i * 7 + 5), y - dv[1] * (i * 7 + 5)); }); X.stroke(); }
+  for (let i = 1; i < 8 && gl; i++) { X.strokeStyle = `rgba(255,226,150,${.4 * gl * (1 - i / 8)})`; X.lineWidth = 2; P(() => { X.moveTo(x - dv[0] * i * 7, y - dv[1] * i * 7); X.lineTo(x - dv[0] * (i * 7 + 5), y - dv[1] * (i * 7 + 5)); }); X.stroke(); }
   P(() => { X.moveTo(x, y); X.lineTo(x - dv[0] * 34, y - dv[1] * 34); }); X.strokeStyle = col; X.lineWidth = 1.6; X.stroke();
-  glow(x, y, 26, '#fff1c4', .7);
+  if (gl) glow(x, y, 26, '#fff1c4', .7 * gl);
 }
 function fire(x, y, w, h, t, a = 1) {
   for (let i = 0; i < 9; i++) {

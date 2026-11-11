@@ -33,6 +33,10 @@ FIX = {
     "kˈʌmbhɐkˌɑːnə": "kˌʊmbəkˈɑːɹnə",   # Kumbhakarna
     "pɑːvˈɑːti": "pˈɑːɹvəti",           # Parvati
     "ɡjˈʊəɹuː": "ɡˈʊɹuː",               # Guru
+    "ˈakbɑː": "ˈʌkbəɹ",                  # Akbar
+    "bˈɜːbəl": "bˈiːɹbəl",              # Birbal
+    "dʒˈahɐnpˌanə": "dʒəhˌɑːnpənˈɑː",   # Jahanpanah
+    "kˈɪtʃdi": "kˈɪtʃdiː",               # khichdi
 }
 
 def main():

@@ -1,0 +1,11 @@
+[
+{"id":"l1","scene":"bet","text":"One freezing winter, Emperor Akbar made a bet. Any man who could stand all night in the icy palace lake would win a thousand gold coins."},
+{"id":"l2","scene":"lake","text":"A poor washerman took the challenge. He shivered and shook, all night long, and by morning, he was still standing!"},
+{"id":"l3","scene":"court","text":"How did you survive? asked Akbar. I kept my eyes on a lamp, burning far away in the palace, said the man."},
+{"id":"l4","scene":"court","text":"Aha! said Akbar. So that lamp kept you warm. No reward for you!"},
+{"id":"l5","scene":"cook","text":"The next day, Birbal didn't come to court. So Akbar went looking for him, and found him cooking khichdi."},
+{"id":"l6","scene":"cook","text":"But the pot was tied high up in a tree, and the tiny fire was far below, on the ground."},
+{"id":"l7","scene":"cook","text":"Birbal! laughed Akbar. That will never cook! Why not, Jahanpanah? said Birbal. If a lamp far away can warm a man in a lake, surely this fire can cook my khichdi."},
+{"id":"l8","scene":"pay","text":"Akbar laughed until he cried, and the washerman got every coin."},
+{"id":"l9","scene":"outro","text":"Follow for more stories."}
+]

@@ -37,6 +37,12 @@ FIX = {
     "bˈɜːbəl": "bˈiːɹbəl",              # Birbal
     "dʒˈahɐnpˌanə": "dʒəhˌɑːnpənˈɑː",   # Jahanpanah
     "kˈɪtʃdi": "kˈɪtʃdiː",               # khichdi
+    "nˈandə": "nˈʌndə",                  # Nanda
+    "jaʃˈəʊdə": "jəʃˈəʊdɑː",             # Yashoda
+    "bˌalɐɹˈɑːmə": "bˈʌləɹɑːmə",         # Balarama
+    "vɹˈɪndɐvˌan": "vɹɪndˈɑːvən",        # Vrindavan
+    "ɡˌɒpɐʃtˈɑːmi": "ɡˌəʊpɑːʃtˈʌmiː",    # Gopashtami
+    "lˈak": "lˈɑːk",                     # lakh
 }
 
 def main():
